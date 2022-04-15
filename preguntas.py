@@ -22,7 +22,12 @@ def pregunta_01():
     40
 
     """
-    return
+    #Get the number of rows: len(df)
+    #len(df) me permite conocer la longitud de las filas en la tabla.
+
+    Longitud_tb10=len(tbl0)
+    return Longitud_tb10
+   
 
 
 def pregunta_02():
@@ -33,7 +38,15 @@ def pregunta_02():
     4
 
     """
-    return
+    #Get the number of rows and columns: df.shape
+    #df.shape se usa para saber la cantidad de filas y columnas.
+
+    cantidad_columnas= tbl0.shape[1]
+
+    #como yo solamente necesito saber la cantidad de columnas, necesito ver el segundo elemento de
+    #lo que me arroja tbl10.shape: (40,4), entonces uso tb10.shape[1]
+    return cantidad_columnas
+   
 
 
 def pregunta_03():
@@ -50,7 +63,16 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    #lo primero que debo hacer es ordenar las letras alfabéticamente, uso df.sort_values 
+    conteo_columna_c1=tbl0._c1.sort_values()
+
+    #Si queremos calcular el número de veces que cada elemento aparece en una columna de un dataframe pandas
+    #podemos recurrir a la función value_counts()     
+    #conteo_columna_c1= conteo_columna_c1.value_counts(sort= False)
+ 
+    conteo_columna_c1= conteo_columna_c1.value_counts(sort= False)
+    return  conteo_columna_c1
+
 
 
 def pregunta_04():
@@ -65,7 +87,13 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
+    #Una operación groupby implica alguna combinación de dividir el objeto, aplicar una función y combinar los resultados. 
+    #Esto se puede usar para agrupar grandes cantidades de datos y calcular operaciones en estos grupos
+    #GroupBy.mean. Calcula la media de los grupos, excluyendo los valores faltantes.
+
+    promedio_c2= tbl0.groupby("_c1")["_c2"].mean()   
+    return promedio_c2
+  
 
 
 def pregunta_05():
@@ -82,7 +110,10 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
+    #se usa la misma estructura que la anterior, solo cambio mean por max
+    maximo_C2= tbl0.groupby("_c1")["_c2"].max()
+    return maximo_C2
+  
 
 
 def pregunta_06():
@@ -94,7 +125,12 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
+    #primero ordeno en mayúsculas los valores de la columna _c4
+    columna_c4= [x.upper() for x in tbl1._c4]
+    #luego los ordeno (sorted) y quito repetidos (set) para que me salga la lista con valores únicos
+    valores_unicos= sorted(set(columna_c4))
+    return valores_unicos
+
 
 
 def pregunta_07():
@@ -110,8 +146,10 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
-
+    #se usa la misma estructura que la anterior, solo cambio max por sum
+    suma_c2= tbl0.groupby("_c1")["_c2"].sum()
+    return suma_c2
+   
 
 def pregunta_08():
     """
@@ -128,7 +166,14 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
+    #DataFrame.assign(**kwargs) 
+    # Assign new columns to a DataFrame. Returns a new object with all original columns in addition to new ones. 
+    # Existing columns that are re-assigned will be overwritten.
+
+    columna_nueva=tbl0.assign(suma=tbl0._c0+tbl0._c2)
+   
+    return columna_nueva
+  
 
 
 def pregunta_09():
@@ -146,7 +191,14 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
+    # pandas.to_datetime ---> Convertir argumento a fecha y hora.
+   
+    fecha=pd.to_datetime(tbl0._c3,infer_datetime_format=True, errors= "ignore" )
+    year=[(x[:4]) for x in fecha]
+    columna_nueva=tbl0.assign(year=year)
+    
+    return columna_nueva
+   
 
 
 def pregunta_10():
