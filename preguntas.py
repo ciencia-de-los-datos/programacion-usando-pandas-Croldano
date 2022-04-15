@@ -215,7 +215,32 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
+
+    #filtro las columnas _c1, _c2 de la tabla
+    data= tbl0.filter(items=("_c1","_c2"))
+
+    #uso sort_values para ordenar la data tomando como base _c2
+    data=data.sort_values("_c2")
+
+    #convierto los valores de _c2 a string
+    data["_c2"]= data["_c2"].astype(str)
+    
+    #DataFrameGroupBy.aggregate ---> Aggregate using one or more operations over the specified axis.
+    #pongo.agreggate para añadir un diccionario que agregue a cada valor de _c1 
+    #los respectivos valores en _c2, y una los valores con ":"
+
+    nueva_tabla= data.groupby(["_c1"],as_index=False).aggregate({"_c2":":".join})
+
+    #DataFrame.set_index---> Establezca el índice de DataFrame utilizando las columnas existentes.
+    #El índice puede reemplazar el índice existente o expandirlo.
+    #establesco un  C1 como índice
+    
+    nueva_tabla.set_index("_c1", inplace=True)
+    
+
+    return nueva_tabla
+ 
+
 
 
 def pregunta_11():
@@ -234,7 +259,17 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
+
+    #ordeno los valores que hacen parte de _c4
+    data=tbl1.sort_values("_c4")
+    
+    #por medio del uso de groupby.aggregate creo un diccionario que contenga los valores de _c4
+    #separados por "," y mediante el uso de aggregate.join las une.
+
+    tabla_nueva=data.groupby(["_c0"], as_index=False).aggregate({"_c4":",".join})
+        
+    return tabla_nueva
+    
 
 
 def pregunta_12():
@@ -252,7 +287,15 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
+    
+    col_c5= [(x[1]+":"+str(x[2])) for x in tbl2.values]
+    data=tbl2.assign(_c5=col_c5)
+    data=data.sort_values("_c5")
+    nueva_tabla=data.groupby(("_c0"), as_index=False).aggregate({"_c5":",".join})
+
+
+    return  nueva_tabla
+  
 
 
 def pregunta_13():
@@ -269,4 +312,12 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    #La función pandas.merge nos permite realizar "joins" entre tablas.
+    # El join es realizado sobre las columnas o sobre las filas. En el primer caso, 
+    # las etiquetas de las filas son ignoradas. En cualquier otro caso (joins realizado entre etiquetas de filas, o entre etiquetas de filas y de columnas), 
+    # las etiquetas de filas se mantienen.
+
+    datos= pd.merge(tbl0,tbl2, on="_c0")
+    suma_c5b=datos.groupby("_c1")["_c5b"].sum()
+    return suma_c5b
+
