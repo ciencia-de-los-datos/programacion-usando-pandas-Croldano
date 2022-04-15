@@ -317,7 +317,7 @@ def pregunta_13():
     # las etiquetas de las filas son ignoradas. En cualquier otro caso (joins realizado entre etiquetas de filas, o entre etiquetas de filas y de columnas), 
     # las etiquetas de filas se mantienen.
 
-    datos= pd.merge(tbl0,tbl2, on="_c0")
-    suma_c5b=datos.groupby("_c1")["_c5b"].sum()
+    data= pd.merge(tbl0,tbl2, on="_c0")
+    suma_c5b=data.groupby("_c1")["_c5b"].sum()
     return suma_c5b
 
